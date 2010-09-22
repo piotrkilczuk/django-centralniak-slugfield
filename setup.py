@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='django_centralniak_slugfield',
-    #version='0.1',
+    version='0.1.1',
     author='Piotr Kilczuk',
     author_email='p.kilczuk@neumea.pl',
     url='http://github.com/centralniak',

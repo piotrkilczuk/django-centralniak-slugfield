@@ -31,9 +31,10 @@ class CentralniakSlugField(SlugField):
         suffix_idx = 1
         # check for uniqueness
         lookup_kwargs = {
-            'pk': model_instance.pk, 
-            self.attname: slug,
+            self.attname: slug
         }
+        if model_instance.pk:
+            lookup_kwargs['pk__not'] = model_instance.pk
         while model_instance.__class__.objects.filter(**lookup_kwargs).count() > 0:
             suffix_idx += 1
             slug = slughifi.slughifi((' ').join(slug_sources)) + '-%d' % suffix_idx
@@ -59,6 +60,6 @@ add_introspection_rules([
             "db_index": ["db_index", {"default": True}],
             "populate_from": ["populate_from", {"default": []}],
             "update_on_edit": ["update_on_edit", {"default": False}],
-        }
+        },
     ),
-], 'django_centralniak_slugfield\.fields\.CentralniakSlugField')
+], ['django_centralniak_slugfield\.fields\.CentralniakSlugField'])
