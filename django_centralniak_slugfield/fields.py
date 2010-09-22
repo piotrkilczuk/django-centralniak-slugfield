@@ -10,6 +10,9 @@ class CentralniakSlugField(SlugField):
     Usage:
     slug = CentralniakSlugField(populate_from=['fieldname1', 'fieldname2']
     
+    @todo: Add 'unique_for' option (handy for example when slugs 
+           have to be unique for given date only)
+    
     """
     
     description = __doc__
@@ -22,15 +25,27 @@ class CentralniakSlugField(SlugField):
         super(CentralniakSlugField, self).__init__(*args, **kwargs)
     
     def __slugify(self, model_instance):
-        "Courtesy of Samuel Adam"
+        "Slughifi is courtesy of Samuel Adam - samuel.adam@gmail.com"
         slug_sources = [getattr(model_instance, field) for field in self.populate_from]
-        return slughifi.slughifi((' ').join(slug_sources))
+        slug = slughifi.slughifi((' ').join(slug_sources))
+        suffix_idx = 1
+        # check for uniqueness
+        lookup_kwargs = {
+            'pk': model_instance.pk, 
+            self.attname: slug,
+        }
+        while model_instance.__class__.objects.filter(**lookup_kwargs).count() > 0:
+            suffix_idx += 1
+            slug = slughifi.slughifi((' ').join(slug_sources)) + '-%d' % suffix_idx
+            lookup_kwargs[self.attname] = slug
+        return slug
     
     def pre_save(self, model_instance, add):
         "Run just before a field is saved"
         current_value = super(CentralniakSlugField, self).pre_save(model_instance, add)
         if not current_value or self.update_on_edit:
-            return self.__slugify(model_instance)
+            slug = self.__slugify(model_instance)
+            return slug
         else:
             return current_value
 
