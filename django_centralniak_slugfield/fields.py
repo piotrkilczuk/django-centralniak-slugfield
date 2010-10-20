@@ -8,20 +8,19 @@ class CentralniakSlugField(SlugField):
     """Provide more handy support for slugs in models
     
     Usage:
-    slug = CentralniakSlugField(populate_from=['fieldname1', 'fieldname2']
-    
-    @todo: Add 'unique_for' option (handy for example when slugs 
-           have to be unique for given date only)
+    slug = CentralniakSlugField(populate_from=['fieldname1', 'fieldname2'], update_on_edit=False, unique_for=['fieldname3'])
     
     """
     
     description = __doc__
     populate_from = None
     update_on_edit = False
+    unique_for = None
     
-    def __init__(self, populate_from, update_on_edit=False, *args, **kwargs):
+    def __init__(self, populate_from, update_on_edit=False, unique_for=None, *args, **kwargs):
         self.populate_from = populate_from
         self.update_on_edit = update_on_edit
+        self.unique_for = unique_for
         super(CentralniakSlugField, self).__init__(*args, **kwargs)
     
     def __slugify(self, model_instance):
@@ -33,6 +32,9 @@ class CentralniakSlugField(SlugField):
         lookup_kwargs = {
             self.attname: slug
         }
+        if self.unique_for:
+            for unique_column in self.unique_for:
+                lookup_kwargs[unique_column] = getattr(self, unique_column)
         if model_instance.pk:
             lookup_kwargs['pk__not'] = model_instance.pk
         while model_instance.__class__.objects.filter(**lookup_kwargs).count() > 0:

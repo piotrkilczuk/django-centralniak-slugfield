@@ -12,7 +12,7 @@ Features:
 
 1. You can choose which fields to populate a slug form (single or multifield slug)
 2. You can choose if slug should be updated on record update or only on creation 
-3. [Planned] Possibility to make slugs unique per given expression only (for example given date)
+3. Possibility to make slugs unique per given expression only (for example given date)
 
 Installation:
 -------------
@@ -29,7 +29,8 @@ Usage:
   class MyModel(models.model):
       fieldname1 = models.CharField(max_length=12)
       fieldname2 = models.CharField(max_length=34)
-      slug = CentralniakSlugField(populate_from=['fieldname1', 'fieldname2'], update_on_edit=False)
+      other_model = models.ForeignKey(OtherModel)
+      slug = CentralniakSlugField(populate_from=['fieldname1', 'fieldname2'], update_on_edit=False, unique_for=['other_model'])
 
 Kudos:
 ------
