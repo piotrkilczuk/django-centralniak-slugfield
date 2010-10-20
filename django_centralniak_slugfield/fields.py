@@ -34,7 +34,7 @@ class CentralniakSlugField(SlugField):
         }
         if self.unique_for:
             for unique_column in self.unique_for:
-                lookup_kwargs[unique_column] = getattr(self, unique_column)
+                lookup_kwargs[unique_column] = getattr(model_instance, unique_column)
         if model_instance.pk:
             lookup_kwargs['pk__not'] = model_instance.pk
         while model_instance.__class__.objects.filter(**lookup_kwargs).count() > 0:
