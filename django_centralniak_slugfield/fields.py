@@ -32,12 +32,13 @@ class CentralniakSlugField(SlugField):
         lookup_kwargs = {
             self.attname: slug
         }
+        exclude_kwargs = {}
         if self.unique_for:
             for unique_column in self.unique_for:
                 lookup_kwargs[unique_column] = getattr(model_instance, unique_column)
         if model_instance.pk:
-            lookup_kwargs['pk__not'] = model_instance.pk
-        while model_instance.__class__.objects.filter(**lookup_kwargs).count() > 0:
+            exclude_kwargs['pk'] = model_instance.pk
+        while model_instance.__class__.objects.exclude(**exclude_kwargs).filter(**lookup_kwargs).count() > 0:
             suffix_idx += 1
             slug = slughifi.slughifi((' ').join(slug_sources)) + '-%d' % suffix_idx
             lookup_kwargs[self.attname] = slug
