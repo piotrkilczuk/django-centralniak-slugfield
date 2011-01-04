@@ -42,7 +42,7 @@ class CentralniakSlugField(SlugField):
             suffix_idx += 1
             slug = slughifi.slughifi((' ').join(slug_sources)) + '-%d' % suffix_idx
             lookup_kwargs[self.attname] = slug
-        return slug
+        return slug[0:self.max_length]
     
     def pre_save(self, model_instance, add):
         "Run just before a field is saved"
