@@ -40,9 +40,11 @@ class CentralniakSlugField(SlugField):
             exclude_kwargs['pk'] = model_instance.pk
         while model_instance.__class__.objects.exclude(**exclude_kwargs).filter(**lookup_kwargs).count() > 0:
             suffix_idx += 1
+            trim = self.max_length - (len(str(suffix_idx)) + 1)
             slug = slughifi.slughifi((' ').join(slug_sources)) + '-%d' % suffix_idx
+            slug = slug[0:trim]
             lookup_kwargs[self.attname] = slug
-        return slug[0:self.max_length]
+        return slug
     
     def pre_save(self, model_instance, add):
         "Run just before a field is saved"

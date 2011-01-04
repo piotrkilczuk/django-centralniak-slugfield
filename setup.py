@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='django-centralniak-slugfield',
-    version='0.1.4',
+    version='0.1.5',
     author='Piotr Kilczuk',
     author_email='p.kilczuk@neumea.pl',
     url='http://github.com/centralniak',
