@@ -8,7 +8,7 @@ setup(
     author='Piotr Kilczuk',
     author_email='p.kilczuk@neumea.pl',
     url='http://github.com/centralniak',
-    description = 'Provides more handy support for slugs in models',
+    description = 'Provides more handy support for slugs in Django models',
     packages=find_packages(),
     provides=['django_centralniak_slugfield'],
     classifiers=[
